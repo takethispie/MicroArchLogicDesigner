@@ -1,10 +1,9 @@
 ﻿namespace MicroArchLogicDesigner;
 
-public interface IClockable
+public abstract class Clockable
 {
-    string Name { get; init; }
-    void ProcessClockEvent(ClockEvent clkEvent) {
-        switch(clkEvent)
+    public void ProcessClockEvent(Value value) {
+        switch(value.ToClockEvent())
         {
             case ClockEvent.Low: OnLowClock(); break;
             case ClockEvent.Rising: OnRisingEdgeClock(); break;
@@ -13,8 +12,8 @@ public interface IClockable
         }
     }
 
-    void OnLowClock();
-    void OnHighClock();
-    void OnRisingEdgeClock();
-    void OnFallingEdgeClock();
+    public abstract void OnLowClock();
+    public abstract void OnHighClock();
+    public abstract void OnRisingEdgeClock();
+    public abstract void OnFallingEdgeClock();
 }

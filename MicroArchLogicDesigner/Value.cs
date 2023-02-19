@@ -30,4 +30,9 @@ public class Value
         ClockEvent.Falling => 3,
         _ => 0
     };
+
+    public static Value operator +(Value A, Value B) => new Value(A.Get() + B.Get());
+    public static Value operator -(Value A, Value B) => new Value(A.Get() - B.Get());
+    public static Value operator *(Value A, Value B) => new Value(A.Get() * B.Get());
+    public static Value operator /(Value A, Value B) => new Value(A.Get() / B.Get());
 }

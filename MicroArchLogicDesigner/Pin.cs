@@ -68,8 +68,8 @@ public class Pin
     /// <param name="value">the new value of the pin</param>
     public void Receive(Value value)
     {
-        if (OnValue != null) OnValue(value); 
         Buffer = value;
+        if (OnValue != null) OnValue(value); 
     }
 }
 

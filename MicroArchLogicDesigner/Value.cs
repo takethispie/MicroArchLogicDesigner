@@ -6,7 +6,7 @@ public class Value
 
     public Value(int value) { this.value = value; }
     public Value(string value) { this.value = int.Parse(value); }
-    public Value(ClockEvent clkEvent) { this.value = FromClockEvent(clkEvent); }
+    public Value(ClockEvent clkEvent) { value = FromClockEvent(clkEvent); }
 
     public override string ToString() => value.ToString();
 
@@ -21,6 +21,11 @@ public class Value
     public void Set(int value) => this.value = value;
     
     public int Get() => value;
+    public string ToHex() => ToHex(value);
+    public string ToHex(int val) => val.ToString("X");
+    public string ToBin() => Convert.ToString(value, 2);
+    public string ToBin(int val) => Convert.ToString(val, 2);
+
 
     private int FromClockEvent(ClockEvent clkEvent) => clkEvent switch
     {
@@ -30,4 +35,11 @@ public class Value
         ClockEvent.Falling => 3,
         _ => 0
     };
+
+    public static Value operator +(Value A, Value B) => new(A.Get() + B.Get());
+    public static Value operator -(Value A, Value B) => new(A.Get() - B.Get());
+    public static Value operator *(Value A, Value B) => new(A.Get() * B.Get());
+    public static Value operator /(Value A, Value B) => new(A.Get() / B.Get());
+
+    public static Value FromHex(string value) => new(Convert.ToInt32(value, 16));
 }

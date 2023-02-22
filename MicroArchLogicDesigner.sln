@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33403.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroArchLogicDesigner", "MicroArchLogicDesigner\MicroArchLogicDesigner.csproj", "{E51098EF-4E5F-4986-A35F-A521D695831E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroArchLogicDesigner", "MicroArchLogicDesigner\MicroArchLogicDesigner.csproj", "{E51098EF-4E5F-4986-A35F-A521D695831E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroArchLogicDesigner.Tests", "MicroArchLogicDesigner.Tests\MicroArchLogicDesigner.Tests.csproj", "{496B43AC-B190-45A1-BE4C-FB52A9EAF81B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroArchLogicDesigner.Tests", "MicroArchLogicDesigner.Tests\MicroArchLogicDesigner.Tests.csproj", "{496B43AC-B190-45A1-BE4C-FB52A9EAF81B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleCPU", "ExampleCPU\ExampleCPU.csproj", "{FBE487CE-1275-437D-8787-60E6F356B587}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{496B43AC-B190-45A1-BE4C-FB52A9EAF81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{496B43AC-B190-45A1-BE4C-FB52A9EAF81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{496B43AC-B190-45A1-BE4C-FB52A9EAF81B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBE487CE-1275-437D-8787-60E6F356B587}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBE487CE-1275-437D-8787-60E6F356B587}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBE487CE-1275-437D-8787-60E6F356B587}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBE487CE-1275-437D-8787-60E6F356B587}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

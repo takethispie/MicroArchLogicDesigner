@@ -17,12 +17,15 @@ public class Adder : IModule
         Result = new Pin("result", width, true, Name);
     }
 
-    private void OnInputAChange(Value value) {
-        var result = new Value(value.Get() + InputB.Buffer.Get());
+    private void OnInputAChange(Value value)
+    {
+        var result = value + InputB.Buffer;
         Result.Set(result);
     }
-    private void OnInputBChange(Value value) {
-        var result = new Value(InputA.Buffer.Get() + value.Get());
+
+    private void OnInputBChange(Value value)
+    {
+        var result = InputA.Buffer + value;
         Result.Set(result);
     }
 }

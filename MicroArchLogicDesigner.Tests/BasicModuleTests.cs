@@ -133,7 +133,7 @@ namespace MicroArchLogicDesigner.Tests
         }
 
         [Fact]
-        public void Should_Correctly_Route_multiplexer()
+        public void Should_Route_multiplexer()
         {
             var multi = new Multiplexer("multi1", 16, 8);
             multi.Inputs[0].Receive(new Value(10));
@@ -144,6 +144,35 @@ namespace MicroArchLogicDesigner.Tests
             multi.Control.Receive(new Value(0));
             Assert.Equal(10, multi.Output.Buffer.Get());
 
+        }
+
+        [Fact]
+        public void Should_Route_demultiplexer()
+        {
+            var multi = new Demultiplexer("demulti1", 16, 8);
+            multi.Input.Receive(new Value(10));
+            multi.Control.Receive(new Value(1));
+            Assert.Equal(10, multi.Output[1].Buffer.Get());
+            multi.Control.Receive(new Value(2));
+            Assert.Equal(0, multi.Output[1].Buffer.Get());
+            Assert.Equal(10, multi.Output[2].Buffer.Get());
+            multi.Input.Receive(new Value(20));
+            Assert.Equal(20, multi.Output[2].Buffer.Get());
+        }
+
+        [Fact]
+        public void Should_Write_and_read_register()
+        {
+            var registerFile = new RegisterFile("regFile1", 16, 16);
+            registerFile.DataIn.Set(new Value(10));
+            registerFile.Dest.Set(new Value(1));
+            registerFile.Clock.Receive(new Value(1));
+            registerFile.Clock.Receive(new Value(0));
+            registerFile.ReadA.Receive(new Value(1));
+            Assert.Equal(10, registerFile.OutputA.Buffer.Get());
+            registerFile.ReadB.Receive(new Value(1));
+            Assert.Equal(10, registerFile.OutputA.Buffer.Get());
+            Assert.Equal(10,registerFile.OutputB.Buffer.Get()); 
         }
     }
 }

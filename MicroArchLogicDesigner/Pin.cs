@@ -53,7 +53,7 @@ public class Pin
     }
 
     /// <summary>
-    /// change value, used for synchronous input or sync/async outputs 
+    /// change value, used for sync input or sync/async outputs 
     /// </summary>
     /// <param name="value">the new value of the pin</param>
     public void Set(Value value)
@@ -63,7 +63,7 @@ public class Pin
     }
 
     /// <summary>
-    /// change value, used for asynchronous updating of inputs 
+    /// change value, used for async inputs 
     /// </summary>
     /// <param name="value">the new value of the pin</param>
     public void Receive(Value value)

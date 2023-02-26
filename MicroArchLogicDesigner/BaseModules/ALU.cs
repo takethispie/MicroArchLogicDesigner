@@ -7,14 +7,19 @@ public class ALU : IModule
     public Pin InputA { get; init; }
     public Pin InputB { get; init; }
     public Pin Result { get; init; }
+    public Pin Constant { get; init; }
     
     public ALU(string name, int width) { 
         Name = name;
         Control = new Pin("controler", 4, false, Name) { OnValue = OnControlChange };
         InputA = new Pin("inputA", width, false, Name) { OnValue = OnInputAChange };
         InputB = new Pin("inputB", width, false, Name) { OnValue = OnInputBChange };
+        Constant = new Pin("constantIn", width / 2, false, Name) { OnValue = OnConstantChange };
         Result = new Pin("result", width, true, Name);
     }
+
+    private void OnConstantChange(Value value) => Result.Set(OpSwitch(Control.Buffer));
+
 
     private Value OpSwitch(Value value)
     {
@@ -23,7 +28,7 @@ public class ALU : IModule
             2 => InputA.Buffer - InputB.Buffer,
             3 => InputA.Buffer * InputB.Buffer,
             4 => InputA.Buffer / InputB.Buffer,
-            _ => InputA.Buffer
+            _ => Value.FromBin(Constant.Buffer.ToBin().PadLeft(InputA.Size, '0')),
         };
     }
 

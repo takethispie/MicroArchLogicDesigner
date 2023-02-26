@@ -58,6 +58,7 @@ public class Pin
     /// <param name="value">the new value of the pin</param>
     public void Set(Value value)
     {
+        if (Buffer.Get() == value.Get()) return;
         Buffer = value;
         if(IsOutput && Targets != null) Targets.ToList().ForEach(target => target.Receive(value));
     }
@@ -68,6 +69,7 @@ public class Pin
     /// <param name="value">the new value of the pin</param>
     public void Receive(Value value)
     {
+        if(Buffer.Get() == value.Get()) return; 
         Buffer = value;
         if (OnValue != null) OnValue(value); 
     }

@@ -53,4 +53,15 @@ public class ExampleCPUModuleTests
         counter.Clock.Receive(Value.One());
         Assert.Equal(10, counter.Output.Buffer.Get());
     }
+
+    [Fact]
+    public void Should_load_alu_op() 
+    {
+        var opDec = new OpDecoder("opDecoder");
+        opDec.Input.Receive(Value.FromBin("00010011"));
+        Assert.Equal("0011", opDec.AluOut.Buffer.ToBin());
+        opDec.Input.Receive(Value.FromBin("00110011"));
+        Assert.Equal("0000", opDec.AluOut.Buffer.ToBin());
+        Assert.Equal("11", opDec.IOOut.Buffer.ToBin());
+    }
 }

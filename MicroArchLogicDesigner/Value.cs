@@ -45,6 +45,6 @@ public class Value
     public static Value FromHex(string value) => new(Convert.ToInt32(value, 16), value.Length * 4);
     public static Value FromBin(string value) => new(Convert.ToInt32(value, 2), value.Length);
 
-    public static Value One() => new(1);
-    public static Value Zero() => new(0);
+    public static Value One(int width = 1) => new(1, width);
+    public static Value Zero(int width = 1) => new(0, width);
 }

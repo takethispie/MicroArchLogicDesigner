@@ -9,10 +9,13 @@ public class RandomAccessMemory : Clockable, IModule
     public Pin ClockIn { get; init; }
     public Pin WriteEnable { get; init; }
     private int[] data;
+    private int dataWidth, adressWidth;
 
     public RandomAccessMemory(string name, int dataWidth, int adressWidth)
     {
         if (dataWidth > 64 || adressWidth > 64) throw new ArgumentOutOfRangeException();
+        this.dataWidth = dataWidth;
+        this.adressWidth = adressWidth;
         Name = name;
         ReadAddress = new Pin("readAddrIn", adressWidth, false, Name);
         WriteAddress = new Pin("writeAddrIn", adressWidth, false, Name);
@@ -21,6 +24,12 @@ public class RandomAccessMemory : Clockable, IModule
         ClockIn = new Pin("clockIn", 1, false, Name) { OnValue = ProcessClockEvent };
         WriteEnable = new Pin("writeEnable", 1, false, Name);
         data = new int[2^dataWidth];
+    }
+
+    public void LoadData(int[] data)
+    {
+        if(data.Length > (2^dataWidth)) throw new ArgumentOutOfRangeException("data is bigger than memory size !");
+        this.data = data;
     }
 
     public override void OnLowClock() { }

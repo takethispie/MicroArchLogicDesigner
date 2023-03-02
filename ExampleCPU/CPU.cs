@@ -1,5 +1,6 @@
 ﻿using MicroArchLogicDesigner;
 using MicroArchLogicDesigner.BaseModules;
+using System.Collections.ObjectModel;
 
 namespace ExampleCPU;
 public class CPU
@@ -46,7 +47,9 @@ public class CPU
         decoder.Second.ConnectTo(registerFile.ReadB);
         decoder.OpOut.ConnectTo(opDecoder.Input);
         decoder.Constant.ConnectTo(alu.Constant);
+        decoder.DestOut.ConnectTo(registerFile.Dest);
         opDecoder.AluOut.ConnectTo(alu.Control);
+        opDecoder.IOOut.ConnectTo(IOSwitch.Control);
 
         registerFile.OutputA.ConnectTo(alu.InputA);
         registerFile.OutputB.ConnectTo(alu.InputB);
@@ -68,4 +71,6 @@ public class CPU
     public void LoadProgramBinaryStr(string[] program) => programMemory.LoadData(program.Select(x => Value.FromBin(x).Get()).ToArray());
 
     public void ClockNext() => clockGenerator.DoQuarterTick();
+
+    public ReadOnlyCollection<int> GetRegisterFileContent() => registerFile.GetContent();
 }

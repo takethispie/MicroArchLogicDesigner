@@ -1,4 +1,6 @@
-﻿namespace MicroArchLogicDesigner.BaseModules;
+﻿using System.Collections.ObjectModel;
+
+namespace MicroArchLogicDesigner.BaseModules;
 
 public class RegisterFile : Clockable, IModule
 {
@@ -24,7 +26,7 @@ public class RegisterFile : Clockable, IModule
         Clock = new Pin("clock", 1, false, Name) { OnValue = onClock };
         OutputA = new Pin("outputA", width, true, Name);
         OutputB = new Pin("outputB", width, true, Name);
-        data = new int[binSize];
+        data = new int[registerCount];
         data[0] = 0;
     }
 
@@ -54,4 +56,6 @@ public class RegisterFile : Clockable, IModule
     }
 
     public override void OnFallingEdgeClock() { }
+
+    public ReadOnlyCollection<int> GetContent() => new ReadOnlyCollection<int>(data);
 }

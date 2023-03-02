@@ -70,11 +70,12 @@ public class ExampleCPUModuleTests
     {
         var cpu = new CPU();
         var program = new List<string> { 
-            "00010101000100000000000000001000",
+            "0".PadLeft(32, '0'),
             "00010101000100000000000000001000"
         };
         cpu.LoadProgramBinaryStr(program.ToArray());
         cpu.ClockNext();
         Assert.Equal(8, cpu.AluOutProbe.Value.Buffer.Get());
+        Assert.Equal(8, cpu.GetRegisterFileContent().ElementAt(1));
     }
 }

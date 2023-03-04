@@ -1,4 +1,6 @@
-﻿namespace MicroArchLogicDesigner.BaseModules;
+﻿using System.Collections.ObjectModel;
+
+namespace MicroArchLogicDesigner.BaseModules;
 
 public class RegisterFile : Clockable, IModule
 {
@@ -15,16 +17,16 @@ public class RegisterFile : Clockable, IModule
 
     public RegisterFile(string name, int width, int registerCount)
     {
-        var binSize = new Value(registerCount).ToBin().Length;
+        var binSize = Convert.ToString(registerCount - 1, 2).Length;
         Name = name;
         ReadA = new Pin("readA", binSize, false, Name) { OnValue = OnInputAControlChange };
         ReadB = new Pin("readB", binSize, false, Name) { OnValue = OnInputBControlChange };
         Dest = new Pin("dest", binSize, false, Name);
-        DataIn = new Pin("data", width, false, Name);
+        DataIn = new Pin("data", width, false, Name) { OnValue = OnDataInchange };
         Clock = new Pin("clock", 1, false, Name) { OnValue = onClock };
         OutputA = new Pin("outputA", width, true, Name);
         OutputB = new Pin("outputB", width, true, Name);
-        data = new int[binSize];
+        data = new int[registerCount];
         data[0] = 0;
     }
 
@@ -38,6 +40,14 @@ public class RegisterFile : Clockable, IModule
 
     public void OnInputBControlChange(Value value) => OutputB.Set(new Value(data[ReadA.Buffer.Get()]));
 
+    public void OnDataInchange(Value value)
+    {
+        if (Clock.Buffer.Get() != 1 || Dest.Buffer.Get() == 0 || Dest.Buffer.Get() >= data.Length) return;
+        data[Dest.Buffer.Get()] = DataIn.Buffer.Get();
+        OutputA.Set(new Value(data[ReadA.Buffer.Get()]));
+        OutputB.Set(new Value(data[ReadA.Buffer.Get()]));
+    }
+
     public override void OnRisingEdgeClock() {
         if(Dest.Buffer.Get() > 0)
             data[Dest.Buffer.Get()] = DataIn.Buffer.Get();
@@ -46,4 +56,6 @@ public class RegisterFile : Clockable, IModule
     }
 
     public override void OnFallingEdgeClock() { }
+
+    public ReadOnlyCollection<int> GetContent() => new ReadOnlyCollection<int>(data);
 }

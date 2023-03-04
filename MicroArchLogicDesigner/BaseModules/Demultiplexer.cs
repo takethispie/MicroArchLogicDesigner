@@ -19,8 +19,8 @@ public class Demultiplexer : IModule
         {
             Output.Add(new Pin("output" + i, width, true, Name));
         }
-        Control = new Pin("control", binSize, false, Name) { OnValue = OnSelectedChange };
-        Input = new Pin("input", width, false, Name) { OnValue = OnValueChange };
+        Control = new Pin("control", binSize, false, Name, true) { OnValue = OnSelectedChange };
+        Input = new Pin("input", width, false, Name, true) { OnValue = OnValueChange };
     }
 
     private void OnSelectedChange(Value value)

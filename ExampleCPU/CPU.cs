@@ -1,4 +1,6 @@
-﻿using MicroArchLogicDesigner.BaseModules;
+﻿using MicroArchLogicDesigner;
+using MicroArchLogicDesigner.BaseModules;
+using System.Collections.ObjectModel;
 
 namespace ExampleCPU;
 public class CPU
@@ -15,6 +17,10 @@ public class CPU
     private Multiplexer IOSwitch;
     private IOModule ioModule;
 
+    public Probe AluOutProbe { get; private set; }
+    public bool EndOfProgram { get; private set; }
+    public bool Running { get; private set; }
+
     public CPU() {
         counter = new Counter("program_counter", 32);
         programMemory = new RandomAccessMemory("program_memory", 32, 32);
@@ -27,6 +33,7 @@ public class CPU
         opDecoder = new OpDecoder("opDecoder");
         IOSwitch = new Multiplexer("IOSwitch", 32, 4);
         ioModule = new IOModule("ioModule");
+        AluOutProbe = new Probe("alu_out_probe", 32);
 
         clockGenerator.Output.ConnectTo(counter.Clock);
         clockGenerator.Output.ConnectTo(programMemory.ClockIn);
@@ -39,17 +46,31 @@ public class CPU
         decoder.First.ConnectTo(registerFile.ReadA);
         decoder.Second.ConnectTo(registerFile.ReadB);
         decoder.OpOut.ConnectTo(opDecoder.Input);
+        decoder.Constant.ConnectTo(alu.Constant);
+        decoder.DestOut.ConnectTo(registerFile.Dest);
         opDecoder.AluOut.ConnectTo(alu.Control);
+        opDecoder.IOOut.ConnectTo(IOSwitch.Control);
 
         registerFile.OutputA.ConnectTo(alu.InputA);
         registerFile.OutputB.ConnectTo(alu.InputB);
+        registerFile.OutputA.ConnectTo(jumpComparator.InputA);
+        registerFile.OutputB.ConnectTo(jumpComparator.InputB);
         registerFile.OutputA.ConnectTo(workingMemory.ReadAddress);
         registerFile.OutputB.ConnectTo(workingMemory.DataIn);
 
         alu.Result.ConnectTo(IOSwitch.Inputs[0]);
+        alu.Result.ConnectTo(AluOutProbe.Value);
         workingMemory.DataOut.ConnectTo(IOSwitch.Inputs[1]);
         IOSwitch.Output.ConnectTo(registerFile.DataIn);
-
-
     }
+
+    public void LoadHexProgram(string[] program) => programMemory.LoadData(program.Select(x => Value.FromHex(x).Get()).ToArray());
+
+    public void LoadProgram(int[] program) => programMemory.LoadData(program);
+
+    public void LoadProgramBinaryStr(string[] program) => programMemory.LoadData(program.Select(x => Value.FromBin(x).Get()).ToArray());
+
+    public void ClockNext() => clockGenerator.DoQuarterTick();
+
+    public ReadOnlyCollection<int> GetRegisterFileContent() => registerFile.GetContent();
 }

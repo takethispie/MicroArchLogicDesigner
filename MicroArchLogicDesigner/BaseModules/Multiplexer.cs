@@ -13,15 +13,15 @@ public class Multiplexer : IModule
         Name = name;
         Width = width;
         Inputs = new List<Pin>();
-        var binSize = new Value(inputNumber).ToBin().Length;
-        foreach(int i in Enumerable.Range(0, inputNumber)) {
+        var binSize = Convert.ToString(inputNumber - 1, 2).Length;
+        foreach (int i in Enumerable.Range(0, inputNumber)) {
             Inputs.Add(new Pin("input" + i, width, false, Name)
             {
                 OnValue = (Value val) => OnValueChange(val, i)
             });
         }
-        Control = new Pin("control", binSize, false, Name) { OnValue = OnSelectedChange };
-        Output = new Pin("output", binSize, true, Name);
+        Control = new Pin("control", binSize, false, Name, true) { OnValue = OnSelectedChange };
+        Output = new Pin("output", width, true, Name, true);
     }
 
     private void OnSelectedChange(Value value)
@@ -33,7 +33,7 @@ public class Multiplexer : IModule
 
     private void OnValueChange(Value value, int inputId)
     {
-        var selected = value.Get();
+        var selected = Control.Buffer.Get();
         if (selected == inputId) Output.Set(value); 
     }
 }

@@ -29,7 +29,10 @@ public class RandomAccessMemory : Clockable, IModule
     public void LoadData(int[] data)
     {
         if(data.Length > (2^dataWidth)) throw new ArgumentOutOfRangeException("data is bigger than memory size !");
-        this.data = data;
+        for (int i = 0; i < data.Length; i++)
+        {
+            this.data[i] = data[i];
+        }
     }
 
     public override void OnLowClock() { }

@@ -64,4 +64,18 @@ public class ExampleCPUModuleTests
         Assert.Equal("0000", opDec.AluOut.Buffer.ToBin());
         Assert.Equal("11", opDec.IOOut.Buffer.ToBin());
     }
+
+    [Fact]
+    public void Should_move_constant()
+    {
+        var cpu = new CPU();
+        var program = new List<string> { 
+            "0".PadLeft(32, '0'),
+            "00010101000100000000000000001000"
+        };
+        cpu.LoadProgramBinaryStr(program.ToArray());
+        cpu.ClockNext();
+        Assert.Equal(8, cpu.AluOutProbe.Value.Buffer.Get());
+        Assert.Equal(8, cpu.GetRegisterFileContent().ElementAt(1));
+    }
 }

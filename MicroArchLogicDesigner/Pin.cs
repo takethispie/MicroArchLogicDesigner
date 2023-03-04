@@ -10,9 +10,9 @@ public class Pin
     public Value Buffer { get; private set; }
     public IEnumerable<Pin> Targets { get; private set; }
     public Action<Value>? OnValue { get; init; }
-    private bool free;
+    private bool free, propagateSameValue;
 
-    public Pin(string name, int size, bool isoutput, string parentName)
+    public Pin(string name, int size, bool isoutput, string parentName, bool propagate = false)
     {
         Name = parentName + "-" + name;
         Size = size;
@@ -20,6 +20,7 @@ public class Pin
         Buffer = new Value(0);
         Targets = new List<Pin>();
         free = true;
+        propagateSameValue = propagate;
     }
 
     /// <summary>
@@ -56,8 +57,10 @@ public class Pin
     /// change value, used for sync input or sync/async outputs 
     /// </summary>
     /// <param name="value">the new value of the pin</param>
+    /// <param name="propagateSameValue">if true while propagate value even if it has not changed</param>
     public void Set(Value value)
     {
+        if (!propagateSameValue && Buffer.Get() == value.Get()) return;
         Buffer = value;
         if(IsOutput && Targets != null) Targets.ToList().ForEach(target => target.Receive(value));
     }
@@ -68,6 +71,7 @@ public class Pin
     /// <param name="value">the new value of the pin</param>
     public void Receive(Value value)
     {
+        if(!propagateSameValue && Buffer.Get() == value.Get()) return; 
         Buffer = value;
         if (OnValue != null) OnValue(value); 
     }

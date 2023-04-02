@@ -1,6 +1,5 @@
-﻿using MicroArchLogicDesigner;
+﻿namespace MicroArchLogicDesigner.Memory;
 
-namespace ExampleCPU;
 public class Counter : Clockable, IModule
 {
     public string Name { get; init; }
@@ -15,11 +14,12 @@ public class Counter : Clockable, IModule
     private int width;
     private int maxCount;
 
-    public Counter(string name, int width) {
-        if(width > 64) throw new ArgumentOutOfRangeException("width is higher than 64 bit");
+    public Counter(string name, int width)
+    {
+        if (width > 64) throw new ArgumentOutOfRangeException("width is higher than 64 bit");
         Name = name;
         this.width = width;
-        maxCount= 2^width;
+        maxCount = 2 ^ width;
         Clock = new Pin("clock", 1, false, name) { OnValue = ProcessClockEvent };
         Data = new Pin("data", width, false, name);
         Load = new Pin("load", 1, false, name);
@@ -30,20 +30,25 @@ public class Counter : Clockable, IModule
 
     public override void OnLowClock() { }
     public override void OnHighClock() { }
-    public override void OnRisingEdgeClock() {
+    public override void OnRisingEdgeClock()
+    {
         EndOfCounter.Set(Value.Zero());
-        if (Load.Buffer.Get() == 1) {
+        if (Load.Buffer.Get() == 1)
+        {
             Value.Set(Data.Buffer.Get());
             Output.Set(Data.Buffer);
-        } else {
-            if(Value.Get() == maxCount) {
-                Value.Set(0);
-                Output.Set(Value.Zero());
-                EndOfCounter.Set(Value.One());
-            } else {
-                Value.Increment();
-                Output.Set(Value);
-            }
+        }
+        else
+            if (Value.Get() == maxCount)
+        {
+            Value.Set(0);
+            Output.Set(Value.Zero());
+            EndOfCounter.Set(Value.One());
+        }
+        else
+        {
+            Value.Increment();
+            Output.Set(Value);
         }
     }
     public override void OnFallingEdgeClock() { }

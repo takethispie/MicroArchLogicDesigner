@@ -1,4 +1,6 @@
 ﻿using ExampleCPU;
+using System.Reflection.Metadata;
+using System.Xml.Linq;
 
 namespace MicroArchLogicDesigner.Tests;
 
@@ -35,26 +37,6 @@ public class ExampleCPUModuleTests
     }
 
     [Fact]
-    public void Should_count()
-    {
-        var counter = new Counter("counter", 32);
-        Assert.Equal(0, counter.Output.Buffer.Get());
-        counter.Clock.Receive(Value.One());
-        Assert.Equal(1, counter.Output.Buffer.Get());
-    }
-
-    [Fact]
-    public void Should_load()
-    {
-        var counter = new Counter("counter", 32);
-        Assert.Equal(0, counter.Output.Buffer.Get());
-        counter.Data.Set(new Value(10));
-        counter.Load.Set(Value.One());
-        counter.Clock.Receive(Value.One());
-        Assert.Equal(10, counter.Output.Buffer.Get());
-    }
-
-    [Fact]
     public void Should_load_alu_op() 
     {
         var opDec = new OpDecoder("opDecoder");
@@ -66,16 +48,33 @@ public class ExampleCPUModuleTests
     }
 
     [Fact]
+    public void Should_merge_two_data()
+    {
+        var InputA = new Pin("inputB", 32, false, "bl");
+        var Constant = new Pin("constantIn", 16, false, "bla");
+        InputA.Buffer.Set(8);
+        Constant.Buffer.Set(8);
+        var intermediate = InputA.Buffer.ToBin()[(InputA.Size / 2)..];
+        var res = Value.FromBin(Constant.Buffer.ToBin() + intermediate);
+        Assert.Equal("00000000000010000000000000001000", res.ToBin());
+    }
+
+    [Fact]
     public void Should_move_constant()
     {
         var cpu = new CPU();
-        var program = new List<string> { 
+        var program = new List<string> {
             "0".PadLeft(32, '0'),
-            "00010101000100000000000000001000"
+            new Instruction(OpCode.Move).Destination(1).Constant(new Value(8, 16)).Build(),
+            new Instruction(OpCode.MoveUpper).Destination(2).Source(1).Constant(new Value(8, 16)).Build()
         };
         cpu.LoadProgramBinaryStr(program.ToArray());
         cpu.ClockNext();
         Assert.Equal(8, cpu.AluOutProbe.Value.Buffer.Get());
         Assert.Equal(8, cpu.GetRegisterFileContent().ElementAt(1));
+        cpu.FullClockCycle();
+        //
+        cpu.FullClockCycle();
+        Assert.Equal("00080008", cpu.AluOutProbe.Value.Buffer.ToHex().ToLower());
     }
 }

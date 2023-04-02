@@ -17,7 +17,7 @@ public class Pin
         Name = parentName + "-" + name;
         Size = size;
         IsOutput = isoutput;
-        Buffer = new Value(0);
+        Buffer = new Value(0, size);
         Targets = new List<Pin>();
         free = true;
         propagateSameValue = propagate;

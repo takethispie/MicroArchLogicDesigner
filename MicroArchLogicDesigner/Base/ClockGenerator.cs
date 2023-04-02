@@ -1,4 +1,4 @@
-﻿namespace MicroArchLogicDesigner.BaseModules;
+﻿namespace MicroArchLogicDesigner.Base;
 public class ClockGenerator : IModule
 {
     public string Name { get; init; }

@@ -1,4 +1,4 @@
-﻿namespace MicroArchLogicDesigner.BaseModules;
+﻿namespace MicroArchLogicDesigner.Memory;
 public class RandomAccessMemory : Clockable, IModule
 {
     public string Name { get; init; }
@@ -23,12 +23,12 @@ public class RandomAccessMemory : Clockable, IModule
         DataOut = new Pin("dataOut", dataWidth, true, Name);
         ClockIn = new Pin("clockIn", 1, false, Name) { OnValue = ProcessClockEvent };
         WriteEnable = new Pin("writeEnable", 1, false, Name);
-        data = new int[2^dataWidth];
+        data = new int[2 ^ dataWidth];
     }
 
     public void LoadData(int[] data)
     {
-        if(data.Length > (2^dataWidth)) throw new ArgumentOutOfRangeException("data is bigger than memory size !");
+        if (data.Length > (2 ^ dataWidth)) throw new ArgumentOutOfRangeException("data is bigger than memory size !");
         for (int i = 0; i < data.Length; i++)
         {
             this.data[i] = data[i];
@@ -37,8 +37,9 @@ public class RandomAccessMemory : Clockable, IModule
 
     public override void OnLowClock() { }
     public override void OnHighClock() { }
-    public override void OnRisingEdgeClock() {
-        if(WriteEnable.Buffer.Get() == 1)
+    public override void OnRisingEdgeClock()
+    {
+        if (WriteEnable.Buffer.Get() == 1)
             data[WriteAddress.Buffer.Get()] = DataIn.Buffer.Get();
         DataOut.Set(new Value(data[ReadAddress.Buffer.Get()]));
     }

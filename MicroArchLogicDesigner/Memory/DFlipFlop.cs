@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace MicroArchLogicDesigner.BaseModules;
+namespace MicroArchLogicDesigner.Memory;
 
 public class DFlipFlop : Clockable, IModule
 {
@@ -15,7 +15,7 @@ public class DFlipFlop : Clockable, IModule
     {
         Name = name;
         Size = size;
-        Clock = new Pin("clock", 1, false, name) { OnValue = ProcessClockEvent};
+        Clock = new Pin("clock", 1, false, name) { OnValue = ProcessClockEvent };
         Input = new Pin("input", size, false, name);
         Output = new Pin("output", size, true, name);
         Value = new Value(0);

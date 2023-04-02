@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace MicroArchLogicDesigner.BaseModules;
+namespace MicroArchLogicDesigner.Memory;
 
 public class RegisterFile : Clockable, IModule
 {
@@ -13,7 +13,7 @@ public class RegisterFile : Clockable, IModule
     public Pin OutputB { get; init; }
     public Pin Clock { get; init; }
 
-    private int[] data; 
+    private int[] data;
 
     public RegisterFile(string name, int width, int registerCount)
     {
@@ -48,8 +48,9 @@ public class RegisterFile : Clockable, IModule
         OutputB.Set(new Value(data[ReadA.Buffer.Get()]));
     }
 
-    public override void OnRisingEdgeClock() {
-        if(Dest.Buffer.Get() > 0)
+    public override void OnRisingEdgeClock()
+    {
+        if (Dest.Buffer.Get() > 0)
             data[Dest.Buffer.Get()] = DataIn.Buffer.Get();
         OutputA.Set(new Value(data[ReadA.Buffer.Get()]));
         OutputB.Set(new Value(data[ReadA.Buffer.Get()]));

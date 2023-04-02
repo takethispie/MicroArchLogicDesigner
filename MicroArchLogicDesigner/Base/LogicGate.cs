@@ -1,4 +1,4 @@
-﻿namespace MicroArchLogicDesigner.BaseModules;
+﻿namespace MicroArchLogicDesigner.Base;
 
 public class LogicGate : IModule
 {
@@ -17,7 +17,8 @@ public class LogicGate : IModule
         Type = type;
     }
 
-    private Value typeSwitch(LogicType logicType) => logicType switch {
+    private Value typeSwitch(LogicType logicType) => logicType switch
+    {
         LogicType.And => new Value(InputA.Buffer.Get() == 1 && InputB.Buffer.Get() == 1 ? 1 : 0),
         LogicType.Or => new Value(InputA.Buffer.Get() == 1 || InputB.Buffer.Get() == 1 ? 1 : 0),
         LogicType.XNor => new Value(InputA.Buffer.Get() == InputB.Buffer.Get() ? 1 : 0),

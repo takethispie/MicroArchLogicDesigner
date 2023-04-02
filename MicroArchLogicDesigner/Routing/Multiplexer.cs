@@ -1,4 +1,4 @@
-﻿namespace MicroArchLogicDesigner.BaseModules;
+﻿namespace MicroArchLogicDesigner.Routing;
 
 public class Multiplexer : IModule
 {
@@ -14,12 +14,11 @@ public class Multiplexer : IModule
         Width = width;
         Inputs = new List<Pin>();
         var binSize = Convert.ToString(inputNumber - 1, 2).Length;
-        foreach (int i in Enumerable.Range(0, inputNumber)) {
+        foreach (int i in Enumerable.Range(0, inputNumber))
             Inputs.Add(new Pin("input" + i, width, false, Name)
             {
-                OnValue = (Value val) => OnValueChange(val, i)
+                OnValue = (val) => OnValueChange(val, i)
             });
-        }
         Control = new Pin("control", binSize, false, Name, true) { OnValue = OnSelectedChange };
         Output = new Pin("output", width, true, Name, true);
     }
@@ -27,13 +26,13 @@ public class Multiplexer : IModule
     private void OnSelectedChange(Value value)
     {
         var selected = value.Get();
-        if(selected > Inputs.Count) throw new IndexOutOfRangeException("");
+        if (selected > Inputs.Count) throw new IndexOutOfRangeException("");
         Output.Set(new Value(Inputs[selected].Buffer.Get()));
     }
 
     private void OnValueChange(Value value, int inputId)
     {
         var selected = Control.Buffer.Get();
-        if (selected == inputId) Output.Set(value); 
+        if (selected == inputId) Output.Set(value);
     }
 }

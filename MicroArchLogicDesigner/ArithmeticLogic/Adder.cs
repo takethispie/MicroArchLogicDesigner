@@ -1,4 +1,4 @@
-﻿namespace MicroArchLogicDesigner.BaseModules;
+﻿namespace MicroArchLogicDesigner.ArithmeticLogic;
 
 public class Adder : IModule
 {
@@ -10,7 +10,7 @@ public class Adder : IModule
 
     public Adder(string name, int width)
     {
-        Name = name; 
+        Name = name;
         Width = width;
         InputA = new Pin("inputA", width, false, Name) { OnValue = OnInputAChange };
         InputB = new Pin("inputB", width, false, Name) { OnValue = OnInputBChange };

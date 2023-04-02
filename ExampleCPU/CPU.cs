@@ -1,5 +1,9 @@
 ﻿using MicroArchLogicDesigner;
-using MicroArchLogicDesigner.BaseModules;
+using MicroArchLogicDesigner.ArithmeticLogic;
+using MicroArchLogicDesigner.Base;
+using MicroArchLogicDesigner.InputOutput;
+using MicroArchLogicDesigner.Memory;
+using MicroArchLogicDesigner.Routing;
 using System.Collections.ObjectModel;
 
 namespace ExampleCPU;
@@ -71,6 +75,21 @@ public class CPU
     public void LoadProgramBinaryStr(string[] program) => programMemory.LoadData(program.Select(x => Value.FromBin(x).Get()).ToArray());
 
     public void ClockNext() => clockGenerator.DoQuarterTick();
+
+    public void FullClockCycle()
+    {
+        var value = clockGenerator.Output.Buffer.ToClockEvent() switch
+        {
+            ClockEvent.Rising => 3,
+            ClockEvent.High => 2,
+            ClockEvent.Falling => 1,
+            _ => 4
+        };
+        for (int i = 0; i < value; i++)
+        {
+            ClockNext();
+        }
+    }
 
     public ReadOnlyCollection<int> GetRegisterFileContent() => registerFile.GetContent();
 }

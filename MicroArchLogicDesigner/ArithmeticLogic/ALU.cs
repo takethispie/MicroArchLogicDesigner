@@ -1,4 +1,4 @@
-﻿namespace MicroArchLogicDesigner.BaseModules;
+﻿namespace MicroArchLogicDesigner.ArithmeticLogic;
 
 public class ALU : IModule
 {
@@ -8,8 +8,9 @@ public class ALU : IModule
     public Pin InputB { get; init; }
     public Pin Result { get; init; }
     public Pin Constant { get; init; }
-    
-    public ALU(string name, int width) { 
+
+    public ALU(string name, int width)
+    {
         Name = name;
         Control = new Pin("controler", 4, false, Name) { OnValue = OnControlChange };
         InputA = new Pin("inputA", width, false, Name) { OnValue = OnInputAChange };
@@ -23,18 +24,22 @@ public class ALU : IModule
 
     private Value OpSwitch(Value value)
     {
-        return value.Get() switch {
+        return value.Get() switch
+        {
             1 => InputA.Buffer + InputB.Buffer,
             2 => InputA.Buffer - InputB.Buffer,
             3 => InputA.Buffer * InputB.Buffer,
             4 => InputA.Buffer / InputB.Buffer,
+            5 => Value.FromBin(Constant.Buffer.ToBin().PadLeft(InputA.Size, '0')),
+            6 => Value.FromBin(Constant.Buffer.ToBin() + InputA.Buffer.ToBin()[(InputA.Size / 2)..]),
             _ => Value.FromBin(Constant.Buffer.ToBin().PadLeft(InputA.Size, '0')),
         };
     }
 
     private void OnControlChange(Value value) => Result.Set(OpSwitch(value));
 
-    private void OnInputAChange(Value value) => Result.Set(value + InputB.Buffer);
+    private void OnInputAChange(Value value) => Result.Set(OpSwitch(Control.Buffer));
 
-    private void OnInputBChange(Value value) => Result.Set(InputA.Buffer + value);
+    private void OnInputBChange(Value value) => Result.Set(OpSwitch(Control.Buffer));
+
 }

@@ -1,4 +1,4 @@
-﻿namespace MicroArchLogicDesigner.BaseModules;
+﻿namespace MicroArchLogicDesigner.ArithmeticLogic;
 
 public class Comparator : IModule
 {

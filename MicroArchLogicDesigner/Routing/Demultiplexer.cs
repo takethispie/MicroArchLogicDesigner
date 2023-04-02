@@ -1,4 +1,4 @@
-﻿namespace MicroArchLogicDesigner.BaseModules;
+﻿namespace MicroArchLogicDesigner.Routing;
 
 public class Demultiplexer : IModule
 {
@@ -16,9 +16,7 @@ public class Demultiplexer : IModule
         Output = new List<Pin>();
         var binSize = new Value(outputNumber).ToBin().Length;
         foreach (int i in Enumerable.Range(0, outputNumber))
-        {
             Output.Add(new Pin("output" + i, width, true, Name));
-        }
         Control = new Pin("control", binSize, false, Name, true) { OnValue = OnSelectedChange };
         Input = new Pin("input", width, false, Name, true) { OnValue = OnValueChange };
     }
